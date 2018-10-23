@@ -1,6 +1,6 @@
 (provide 'cpputils)
-(setq cpputilsTypeRegex "\\([a-zA-Z_][a-zA-Z0-9_:<>]*[&\\*]?\\) ")
-(setq cpputilsIdentifierRegex "\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\([(,)]\\)")
+(setq cpputilsTypeRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_:<>]*[&\\*]?\\) ")
+(setq cpputilsIdentifierRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\([(,)]\\)")
 
 (defun cpputils-parseReturn(className) "Parse return value of the function definition starting on this line"
        (interactive "sClass name") (let ((point0 (re-search-forward "^ *")))
@@ -22,7 +22,7 @@
                          (if (equal (match-string-no-properties 1) "void") nil (match-string-no-properties 1)) nil))
 
 (defun cpputils-getIdentifier () "Return the identifier name starting at point"
-       (interactive) (when (re-search-forward (concat cpputilsIdentifierRegex) (line-end-position) t 1)
+       (interactive) (when (re-search-forward cpputilsIdentifierRegex (line-end-position) t 1)
                        (match-string-no-properties 1)))
 
 (defun cpputils-replaceFollowingDocstring () "clear the `';' and the doygen documentation after a function declaration; replace with an empty function body"
