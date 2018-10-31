@@ -36,7 +36,7 @@ else it uncomments current line"
 			 (uncomment-region (region-beginning) (region-end))
 		       (uncomment-region (line-beginning-position) (line-end-position))))
 
-(defun smart-beginning-of-line ()
+(defun textUtils-SmartBeginningOfLine ()
   "Move point to first non-whitespace character or beginning-of-line.
 
 Move point to the first non-whitespace character on this line.
@@ -47,7 +47,7 @@ If point was already at that position, move point to beginning of line."
     (and (= oldpos (point))
 	 (beginning-of-line))))
 
-(defun buffer-mode (buffer-or-string)
+(defun textUtils-bufferMode (buffer-or-string)
   "Returns the major mode associated with a buffer."
   (with-current-buffer buffer-or-string
     major-mode))
