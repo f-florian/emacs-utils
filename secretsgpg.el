@@ -17,19 +17,19 @@ Requires transparent decryption configured to work on encrypted files, see e.g. 
            (setq tmpval (split-string (car passwds)))
            (setq passwds (cdr passwds))
            (unless (gethash (car tmpval) hashTable)
-               (puthash (car tmpval) (cdr tmpval) hashTable)))))
+             (puthash (car tmpval) (cdr tmpval) hashTable)))))
 
 (defun secretsgpg-getEncryptedPassword (name &optional hashTableObject) "Get password which is stored encrypted (but may alreay have been loaded)
 
 Get the value associated to the key 'name' in the specified hash table (if it is an hash table, otherwise in SecretsgpgHashTable).
 The returned vaule is a list"
-       (let()
+       (let(value)
          (unless (hash-table-p hashTableObject)
            (setq hashTableObject secretsgpg-hashTable))
          (setq value (gethash name hashTableObject nil))
          (if value
              value
-           (secretsgpg-load-encrypted-passwords hashTableObject secretsgpg-defaultFilename)
+           (secretsgpg-loadEncryptedPasswords hashTableObject secretsgpg-defaultFilename)
            (gethash name hashTableObject nil))))
 
 (defun secretsgpg-addLineToFile (data &optional filename) "Append a line with given content to a given file
@@ -41,4 +41,21 @@ The file is assumed to end with a newline"
          (insert-file-contents filename)
          (insert (concat data "\n"))
          (save-buffer)))
+
+(defun secretsgpg-addField (&optional hashTableObject) "Add a field to the given hashtable
+
+The field can contain passwords and it is then prompted for"
+       (interactive)
+       (let (key field subfield)
+         (unless (hash-table-p hashTableObject)
+           (setq hashTableObject secretsgpg-hashTable))
+         (setq key (read-minibuffer "hash key"))
+         (unless (and
+                  (setq field (gethash key hashTableObject))
+                  (not  (equal (read-minibuffer "Key already exists; answer 'y' to append subfields to that key") "y")))
+           (puthash key
+                    (while (setq subfield (read-passwd "Input next subfield (leave blank to finish)"))
+                      (setq field (append field (list subfield)))
+                      field)
+                    hashTableObject))))
 
