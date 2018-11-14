@@ -32,3 +32,13 @@ The returned vaule is a list"
            (secretsgpg-load-encrypted-passwords hashTableObject secretsgpg-defaultFilename)
            (gethash name hashTableObject nil))))
 
+(defun secretsgpg-addLineToFile (data &optional filename) "Append a line with given content to a given file
+
+The file is assumed to end with a newline"
+       (interactive "sLine fFilename")
+       (with-temp-buffer
+         (unless filename (setq filename secretsgpg-defaultFilename))
+         (insert-file-contents filename)
+         (insert (concat data "\n"))
+         (save-buffer)))
+
