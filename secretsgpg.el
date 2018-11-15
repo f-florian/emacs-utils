@@ -59,3 +59,17 @@ The field can contain passwords and it is then prompted for"
                       field)
                     hashTableObject))))
 
+(defun secretsgpg-concatWithSpaces (stringList)
+  (concat (car stringList) (when (cdr-safe stringList) (concat " " (secretsgpg-concatWithSpaces (cdr stringList))))))
+
+(defun secretsgpg-writeHashTable (&optional hashTableObject fileName) "Add a field to the given hashtable
+
+The field can contain passwords and it is then prompted for"
+       (interactive)
+         (with-temp-buffer
+           (maphash
+            (lambda (key value)
+              (insert (concat key (secretsgpg-concatWithSpaces value) "\n")))
+            (when (hash-table-p hashTableObject) hashTableObject secretsgpg-hashTable))
+           (write-file (if fileName fileName secretsgpg-defaultFilename) nil)))
+
