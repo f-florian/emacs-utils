@@ -1,6 +1,35 @@
 (provide 'cpputils)
+(require 'cmake-ide)
 (setq cpputilsTypeRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_:<>]*[&\\*]?\\) ")
 (setq cpputilsIdentifierRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\([(,)]\\)")
+
+(defun cpputils-newClass (name subdirectory) "Add a new class, also writing corresponding header and source skeletons"
+       (interactive "sClass name:\nssubdirectory (wrt current):)")
+
+       ;set things
+       (make-local-variable fullFileBaseName)
+       (make-local-variable CMakeMain)
+       (make-local-variable nameLower)
+       (when (string-empty-p subdirectory)
+         (setq subdirectory "./"))
+       (setq nameLower (downcase name))
+       (unless (= (aref subdirectory (- (length subdirectory) 1)) "/")
+         (setq subdirectory (concat subdirectory "/")))
+       (setq fullFileBaseName (concat subdirectory nameLower))
+
+       ;create directory if it doesn't exist
+       (if (file-directory-p subdirectory)
+           (when (file-regular-p (concat subdirectory "CMakeLists.txt"))
+             (find-file (concat subdirectory "CMakeLists.txt"))
+             (when (re-search-forward "set(sources .*)")
+               (backward-char 1)
+               (insert (concat nameLower ".cpp")))
+             (save-buffer)
+             (kill-buffer))
+         (make-directory subdirectory t)
+         (copy-file))
+       (setq CMakeMain (cide--topmost-cmakelists subdirectory nil))
+       (create-file-buffer ))
 
 (defun cpputils-parseReturn(className) "Parse return value of the function definition starting on this line"
        (interactive "sClass name") (let ((point0 (re-search-forward "^ *")))
