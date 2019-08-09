@@ -7,3 +7,28 @@ Open and close specify the opening and closing braces which can actually be any 
        (insert (concat " \\right" close))
        (goto-char start)
        (insert (concat " \\left" open " ")))
+
+(defun TeXUtils-mkAutobraces () "Make normal braces \left-\right type blaces
+
+Todo: make the list of braces customizable or match something existing
+TODO: point must be on open bracet"
+  (interactive)
+  (insert "\\left")
+  (forward-sexp 1)
+  (backward-char 1)
+  (insert "\\right"))
+
+(defun TeXUtils-rmAutobraces () "Make normal braces \left-\right type blaces
+
+Todo: make the list of braces customizable or match something existing
+TODO: point must be on open bracet"
+  (interactive)
+  (delete-region (point) (- (point) 5))
+  (forward-sexp 1)
+  (delete-region (- (point) 1) (- (point) 7)))
+
+(defun TeXUtils-toggleAutobraces () "Toggle between normal braces and \left-\right type blaces
+
+TODO: call make or remove as appropriate"
+  (interactive)
+  (TeXUtils-mkAutobraces))
