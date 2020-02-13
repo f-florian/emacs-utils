@@ -1,7 +1,7 @@
 (provide 'genaralUtils)
 
-(defun genaralUtils-killBufferMatchingRegex (regex)
-    (interactive)
+(defun genaralUtils-killBuffersMatchingRegex (regex)
+    (interactive "sRegex")
   (let ((buffers (buffer-list))
         zombies)
     (while buffers

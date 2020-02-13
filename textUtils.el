@@ -51,3 +51,11 @@ If point was already at that position, move point to beginning of line."
   "Returns the major mode associated with a buffer."
   (with-current-buffer buffer-or-string
     major-mode))
+
+(defun textUtils-decideCase ()
+  "Decide if auto-capitalize should upcase next word.
+
+Exclude some acronyms and try to handle i in i.e."
+  (not (looking-back
+           "\\([Ee]\\.g\\|[Ii]\\.e\\)\\.[^.!?]*" (- (point) 20))))
+

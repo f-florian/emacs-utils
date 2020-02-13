@@ -1,10 +1,12 @@
 (provide 'TeXUtils)
+(require 'textUtils)
+
 (defun TeXUtils-insertBraces (open close start end) "Insert autoscaling pairing braces in LaTeX
 
 Open and close specify the opening and closing braces which can actually be any strings; this function does not attempt to check that they are valid LaTeX delimiters"
        (interactive)
        (goto-char end)
-       (insert (concat " \\right" close))
+       (insert (concat "\\right" close))
        (goto-char start)
        (insert (concat " \\left" open " ")))
 
@@ -32,3 +34,17 @@ TODO: point must be on open bracet"
 TODO: call make or remove as appropriate"
   (interactive)
   (TeXUtils-mkAutobraces))
+
+(defun TeXUtils-decideCase ()
+  "Decide if auto-capitalize should upcase next word in TeX mode.
+
+Exclude math, but looks for points in math mode."
+  (or (not (save-match-data (texmathp)))
+      (not (looking-back
+        "[.!?]\\( \\|	\\|
+\\|\\\\end{[a-zA-Z\\*]*}\\)*" (- (point) 50)))))
+
+;; (global-set-key (kbd "<f5> <f5>") (lambda () (interactive)
+;;                       (if (not (looking-back
+;;                                 "[.!?]\\( \\|	\\|
+;; \\|\\\\end{[a-zA-Z\\*]*}\\)*" (- (point) 50)))(insert "t")(insert "f"))))
