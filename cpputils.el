@@ -1,4 +1,15 @@
 (provide 'cpputils)
+(defun cpputils-hideBlock () "Use vimish-fold to fold the current block
+
+Block are detected using hs"
+       (interactive)
+       (if (vimish-fold--folds-in (point)(point))
+           (vimish-fold-toggle)
+         (hs-find-block-beginning)
+         (setq cpputils-regionStart (point))
+         (forward-sexp)
+         (vimish-fold cpputils-regionStart (point))))
+
 (setq cpputilsTypeRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_:<>]*[&\\*]?\\) ")
 (setq cpputilsIdentifierRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\([(,)]\\)")
 
