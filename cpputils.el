@@ -1,14 +1,14 @@
 (provide 'cpputils)
-(defun cpputils-hideBlock () "Use vimish-fold to fold the current block
+;; (defun cpputils-hideBlock () "Use vimish-fold to fold the current block
 
-Block are detected using hs"
-       (interactive)
-       (if (vimish-fold--folds-in (point)(point))
-           (vimish-fold-toggle)
-         (hs-find-block-beginning)
-         (setq cpputils-regionStart (point))
-         (forward-sexp)
-         (vimish-fold cpputils-regionStart (point))))
+;; Block are detected using hs"
+;;        (interactive)
+;;        (if (vimish-fold--folds-in (point)(point))
+;;            (vimish-fold-toggle)
+;;          (hs-find-block-beginning)
+;;          (setq cpputils-regionStart (point))
+;;          (forward-sexp)
+;;          (vimish-fold cpputils-regionStart (point))))
 
 (setq cpputilsTypeRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_:<>]*[&\\*]?\\) ")
 (setq cpputilsIdentifierRegex "\\=\\([a-zA-Z_][a-zA-Z0-9_]*\\)\\([(,)]\\)")
@@ -99,3 +99,8 @@ if a region is active (use-region is t) it only applies to functions in the regi
                                          (cpputils-addDoxygen returnValue params))
                                          (forward-line -1)
                                          (beginning-of-line)))))
+
+;; (defun cpputils-makeClass  (className) "Create header and source file for a class"
+;;        (interactive "sClass name")
+       
+;;   )
