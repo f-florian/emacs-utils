@@ -1,14 +1,27 @@
 (provide 'TeXUtils)
 (require 'textUtils)
 
+(defun TeXUtils-getBoundaries () "Get the boundary of the current region, or point
+
+Get a pair (as list) (start, end) containing the boundaries of the current region. If no region is active, both boundaries are (point)"
+       (if (use-region-p)
+           (list (region-beginning) (region-end))
+         (list (point)(point))))
+
+(defun TeXUtils-insertPairs (open close start end) "Insert matching delimiters in LaTeX
+
+Open and close specify the opening and closing delimiters which can be any strings; this function does not attempt to check that they are valid LaTeX delimiters"
+       (interactive)
+       (goto-char end)
+       (insert close)
+       (goto-char start)
+       (insert open))
+
 (defun TeXUtils-insertBraces (open close start end) "Insert autoscaling pairing braces in LaTeX
 
 Open and close specify the opening and closing braces which can actually be any strings; this function does not attempt to check that they are valid LaTeX delimiters"
        (interactive)
-       (goto-char end)
-       (insert (concat "\\right" close))
-       (goto-char start)
-       (insert (concat " \\left" open " ")))
+       (TeXUtils-insertPairs (concat "\\left" open " ") (concat " \\right" close) start end))
 
 (defun TeXUtils-mkAutobraces () "Make normal braces \left-\right type blaces
 

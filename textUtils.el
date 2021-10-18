@@ -59,3 +59,38 @@ Exclude some acronyms and try to handle i in i.e."
   (not (looking-back
            "\\([Ee]\\.g\\|[Ii]\\.e\\)\\.[^.!?]*" (- (point) 20))))
 
+(defun textUtils-titleCase (@begin @end)
+  "Title case text between nearest brackets, or current line, or text selection.
+If a word already contains cap letters such as HTTP, URL, they are left as is.
+
+When called in a elisp program, *begin *end are region boundaries.
+Based on
+URL `http://ergoemacs.org/emacs/elisp_title_case_text.html'
+"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (region-end))
+     (let (
+           $p1
+           $p2
+           ($skipChars "^\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕"))
+       (progn
+         (skip-chars-backward $skipChars (line-beginning-position))
+         (setq $p1 (point))
+         (skip-chars-forward $skipChars (line-end-position))
+         (setq $p2 (point)))
+       (list $p1 $p2))))
+  (let* (
+         ($strPairs []))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region @begin @end)
+        (upcase-initials-region (point-min) (point-max))
+        (let ((case-fold-search nil))
+          (mapc
+           (lambda ($x)
+             (goto-char (point-min))
+             (while
+                 (search-forward (aref $x 0) nil t)
+               (replace-match (aref $x 1) "FIXEDCASE" "LITERAL")))
+           $strPairs))))))
